@@ -14,10 +14,9 @@ element.addEventListener("keyup", function (event){
         }).catch(function (error) {
             alert(error.message);
     });
-
-    const button = document.querySelector(".btn");
-    button.addEventListener("click", function () {
-        alert("The button is clicked by " + name); //TODO
-    });
 });
 
+const button = document.querySelector(".btn");
+button.addEventListener("click", function () {
+    location.href = "../html/register.html";
+});
