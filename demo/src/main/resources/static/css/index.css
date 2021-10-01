@@ -1,0 +1,46 @@
+body {
+    background-color: ghostwhite;
+    text-align: right;
+}
+
+* {
+    text-align: right;
+    margin: 5px;
+}
+
+head > title {
+    text-align: center;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+head > a {
+    display: inline;
+}
+
+table, th {
+    width: 100%;
+    border: thin solid red;
+    border-collapse: collapse;
+    text-align: right;
+    column-width: 250px;
+}
+
+td {
+    width: 100%;
+    border: thin solid red;
+    border-collapse: collapse;
+    text-align: center;
+    column-width: 250px;
+}
+
+table > th > input {
+    text-align: center;
+    column-width: 150px;
+}
+
+th > img {
+    width: 20px;
+    height: 20px;
+}
