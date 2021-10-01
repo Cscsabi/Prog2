@@ -18,5 +18,5 @@ element.addEventListener("keyup", function (event){
 
 const button = document.querySelector(".btn");
 button.addEventListener("click", function () {
-    location.href = "../html/register.html";
+    location.href = "../html/register-1.html";
 });
