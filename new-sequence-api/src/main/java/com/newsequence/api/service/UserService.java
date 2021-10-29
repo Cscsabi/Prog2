@@ -2,6 +2,7 @@ package com.newsequence.api.service;
 
 import com.newsequence.api.model.User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public interface UserService {

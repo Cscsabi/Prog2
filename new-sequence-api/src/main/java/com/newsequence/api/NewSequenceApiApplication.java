@@ -9,5 +9,4 @@ public class NewSequenceApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NewSequenceApiApplication.class, args);
 	}
-
 }

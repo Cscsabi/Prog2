@@ -24,6 +24,7 @@ public class UserController {
     @PostMapping()
     public User register(@RequestBody() User user) {
         //TODO: registration
+
         return null;
     }
 

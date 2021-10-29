@@ -18,6 +18,9 @@ public class Item {
     @Column(name = "item_type")
     public String itemType;
 
+    @Column(name = "item_price")
+    public double itemPrice;
+
     public Item() {}
 
     public void setItemId(Long itemId) {
