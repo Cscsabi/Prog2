@@ -1,7 +1,6 @@
 package com.newsequence.api.dto;
 
 import com.newsequence.api.annotation.PasswordMatches;
-import com.newsequence.api.annotation.ValidEmail;
 import com.sun.istack.NotNull;
 
 import javax.validation.constraints.NotEmpty;
@@ -21,7 +20,6 @@ public class UserDto {
     private String password;
     private String matchingPassword;
 
-    @ValidEmail
     @NotNull
     @NotEmpty
     private String email;

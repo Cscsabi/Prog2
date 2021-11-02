@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Sequence</title>
+    <link rel="stylesheet" href="../static/index.css">
+    <link rel="icon" type="image/x-icon" href="../static/pics/favicon.png">
+</head>
+<body>
+    <table class="top">
+        <thead>
+            <tr>
+                <td><img src= ../static/pics/logo_white.png alt="logo"></td>
+                <td>
+                    <input type="text">
+                </td>
+                <td>DDAS</td>
+                <td>ASD</td>
+                <td>DASD</td>
+            </tr>
+        </thead>
+    </table>
+    
+    <h1 th:text="'Thymeleaf ' + ${message} + ' App'"></h1>
+    
+</body>
+</html>

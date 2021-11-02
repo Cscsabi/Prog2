@@ -1,34 +1,40 @@
 package com.newsequence.api.service.impl;
 
-import com.newsequence.api.dto.UserDto;
 import com.newsequence.api.exception.user.UserDoesNotExistException;
 import com.newsequence.api.model.User;
 import com.newsequence.api.repository.UserRepository;
 import com.newsequence.api.service.UserService;
-import org.glassfish.jersey.internal.Errors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Optional;
 
 @Component
 public class NewSequenceUserService implements UserService {
 
     private final UserRepository userRepository;
+    //private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    public NewSequenceUserService(UserRepository userRepository) {
+    public NewSequenceUserService(UserRepository userRepository) { //, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        //this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @Override
     public User register(User user) {
-        return null;
+        boolean userExists = userRepository.findById(user.getId()).isPresent();
+
+        if (userExists) {
+            throw new IllegalStateException("email already taken");
+        }
+
+        //String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+
+        String encodedPassword = user.getPassword();
+        user.setPassword(encodedPassword);
+
+        userRepository.save(user);
+
+        return user;
+
     }
 
     @Override

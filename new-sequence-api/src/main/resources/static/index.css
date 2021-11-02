@@ -1,0 +1,17 @@
+* {
+    border: thin solid red;
+}
+
+table td{
+    border-collapse: collapse;
+    height: 5em;
+}
+
+table tr {
+    width: 100%;
+}
+
+table img {
+    width: 150px;
+    height: 100px;
+}
