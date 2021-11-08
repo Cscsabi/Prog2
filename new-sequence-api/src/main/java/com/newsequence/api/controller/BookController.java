@@ -4,27 +4,22 @@ import com.newsequence.api.model.Book;
 
 import com.newsequence.api.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BookController {
 
-    private BookService bookService;
+    private final BookService bookService;
 
     @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
     }
 
-    @GetMapping
-    public Book getById(@PathVariable(value = "id") Long bookId) {
-        return this.bookService.getBook(bookId);
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("add")
     public Book addBook(@RequestBody Book book) {
         return bookService.addBook(book);
     }
@@ -32,5 +27,10 @@ public class BookController {
     @GetMapping("{id}")
     public Book getBook(@PathVariable Long id) {
         return bookService.getBook(id);
+    }
+
+    @GetMapping("all")
+    public List<Book> getBooks() {
+        return bookService.getBooks();
     }
 }

@@ -1,41 +1,43 @@
-import React, {Component} from "react";
-import {Card, Table} from "react-bootstrap";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faList} from '@fortawesome/free-solid-svg-icons'
-import axios from 'axios'
+import React, { useEffect } from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import { useStoreon } from "storeon/react";
+import { AppEvents } from "../store";
+import { Book } from "./Book";
 
-export default class BookList extends Component {
+export const BookList = () => {
+  const { dispatch, books } = useStoreon("books");
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            books : []
-        };
+  useEffect(() => {
+    console.log(books);
+    if (!books.length) {
+      dispatch(AppEvents.LoadBooks);
     }
+  }, [dispatch, books]);
 
-    render() {
-        return (
-            <Card className="border border-dark bg-dark text-white">
-                <Card.Header><FontAwesomeIcon icon={faList}/>Book List</Card.Header>
-                <Card.Body>
-                    <Table bordered hover striped variant="dark">
-                        <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>ISBN Number</th>
-                            <th>Language</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr align="center">
-                                <td colSpan="6">No Books Available.</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </Card.Body>
-            </Card>
-        );
-    }
-}
+  const bookGroups = books.reduce(
+    (bookAccumulator, book, index) => {
+      if (index % 3 === 0 && index !== 0) {
+        bookAccumulator.push([book]);
+      } else {
+        const currentGroup = Math.floor(index / 3);
+        bookAccumulator[currentGroup].push(book);
+      }
+      return bookAccumulator;
+    },
+    [[]]
+  );
+
+  return (
+    <Container>
+      {bookGroups.map((bookGroup, bookGroupIndex) => (
+        <Row key={`BookGroup-${bookGroupIndex}`}>
+          {bookGroup.map((book, bookIndex) => (
+            <Col key={`Book-${bookIndex}`}>
+              <Book book={book}></Book>
+            </Col>
+          ))}
+        </Row>
+      ))}
+    </Container>
+  );
+};

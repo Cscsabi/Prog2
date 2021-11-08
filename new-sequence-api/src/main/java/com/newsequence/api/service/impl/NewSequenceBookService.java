@@ -1,16 +1,11 @@
 package com.newsequence.api.service.impl;
-
 import com.newsequence.api.model.Book;
 import com.newsequence.api.repository.BookRepository;
 import com.newsequence.api.service.BookService;
-import groovyjarjarpicocli.CommandLine;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.List;
 
 
 @Component
@@ -42,5 +37,10 @@ public class NewSequenceBookService implements BookService {
     @Override
     public Book getBook(Long id) {
         return bookRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Book> getBooks() {
+        return bookRepository.findAll();
     }
 }

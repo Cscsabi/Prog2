@@ -1,66 +1,48 @@
-import React, {Component} from "react";
-import {Button, Card, Col, Form, Row} from "react-bootstrap";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlusSquare, faSave} from '@fortawesome/free-solid-svg-icons'
+import React from "react";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
-export default class Book extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {title:'', author:''};
-        this.bookChange = this.bookChange.bind(this);
-        this.submitBook = this.submitBook.bind(this);
-    }
-
-    submitBook(event) {
-        alert('Title: ' + this.state.title + ' Author: ' + this.state.author);
-        event.preventDefault();
-    }
-
-    bookChange(event) {
-        this.setState({
-            [event.target.name]:event.target.value
-        })
-    }
-
-    render() {
-        return (
-            <Card className="border border-dark bg-dark text-white">
-                <Card.Header><FontAwesomeIcon icon={faPlusSquare}/>Add New Book</Card.Header>
-                <Form onSubmit={this.submitBook} id="bookFormId">
-                    <Card.Body as={Row}>
-                            <Form.Group
-                                className="mb-3"
-                                controlId="formGridTitle"
-                                as={Col}>
-                                <Form.Label>Title</Form.Label>
-                                <Form.Control
-                                    required
-                                    type="test" name="title"
-                                    value={this.state.title}
-                                    onChange={this.bookChange}
-                                    className={"bg-dark text-white"}
-                                    placeholder="Enter Book Title" />
-                            </Form.Group>
-                            <Form.Group as={Col}>
-                                <Form.Label>Author</Form.Label>
-                                <Form.Control
-                                    required
-                                    controlId="formGridAuthor"
-                                    value={this.state.author}
-                                    onChange={this.bookChange}
-                                    type="test" name="author"
-                                    className={"bg-dark text-white"}
-                                    placeholder="Enter Book Author" />
-                            </Form.Group>
-                            <Card.Footer style={{"textAlign":"right"}}>
-                                <Button variant="success" type="submit">
-                                    <FontAwesomeIcon icon={faSave}/>Submit
-                                </Button>
-                            </Card.Footer>
-                    </Card.Body>
-                </Form>
-            </Card>
-        );
-    }
-}
+export const Book = ({
+  book: { author, coverPhotoUrl, isbnNumber, language, price, title },
+}) => {
+  return (
+    <Card className="border border-dark bg-dark text-white">
+      <Card.Header align="center">
+        <h1>{author}</h1>
+      </Card.Header>
+      <Card.Body>
+        <Container>
+          <Row align="center">
+            <Col>
+              <img
+                src={coverPhotoUrl}
+                alt="cover"
+                width="150"
+                height="150"
+              ></img>
+            </Col>
+          </Row>
+          <Row align="center">
+            <Col>
+              <span>{title}</span>
+            </Col>
+          </Row>
+          <Row align="center">
+            <Col>
+              <span>Isbn-number:{isbnNumber}</span>
+            </Col>
+            <Row align="center">
+              <span>{price} HUF</span>
+            </Row>
+          </Row>
+          <Row align="center">
+            <Col>
+              <a className="btn btn-primary btn-lg" href="/cart" role="button">
+                Add To Cart
+              </a>
+            </Col>
+          </Row>
+        </Container>
+      </Card.Body>
+    </Card>
+  );
+};

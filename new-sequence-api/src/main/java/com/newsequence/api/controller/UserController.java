@@ -23,14 +23,13 @@ public class UserController {
 
     @PostMapping()
     public User register(@RequestBody() User user) {
-        //TODO: registration
-
-        return null;
+        //TODO: registration ??
+        return userService.register(user);
     }
 
     @PostMapping("/login")
     public User login(@RequestBody() User user) {
-        //TODO: login
-        return null;
+        //TODO: login ??
+        return userService.login(user.getEmailAddress(), user.getPassword());
     }
 }
