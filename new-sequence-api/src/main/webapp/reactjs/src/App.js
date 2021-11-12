@@ -8,6 +8,9 @@ import { AddBook } from "./components/AddBook";
 import { BookList } from "./components/BookList";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { store } from "./store";
+import { CartList } from "./components/CartList";
+import { Register } from "./components/Register";
+import { Login } from "./components/Login";
 
 function App() {
   const marginTop = {
@@ -25,6 +28,9 @@ function App() {
                 <Route path="/" exact component={Welcome} />
                 <Route path="/add" exact component={AddBook} />
                 <Route path="/list" exact component={BookList} />
+                <Route path="/registration" exact component={Register} />
+                <Route path="/login" exact component={Login} />
+                <Route path="/cart" exact component={CartList} />
               </Switch>
             </Col>
           </Row>

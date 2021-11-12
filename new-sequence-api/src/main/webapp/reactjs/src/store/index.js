@@ -24,6 +24,8 @@ export const AppEvents = {
   LoadBooks: "LoadBooks",
   LoadBooksEnd: "LoadBooksEnd",
   AddToCart: "AddToCart",
+  Register: "Register",
+  Login: "Login",
 };
 
 const appModule = (store) => {
@@ -40,9 +42,10 @@ const appModule = (store) => {
     }
   });
 
-  store.on(AppEvents.LoadBooksEnd, (state, [book]) => ({
+  store.on(AppEvents.LoadBooksEnd, (state, book) => ({
     ...state,
-    books: Array.from(Array(12).keys()).map(() => book),
+    //books: Array.from(Array(12).keys()).map(() => book),
+    books: [...book],
   }));
 
   store.on(AppEvents.AddToCart, (state, book) => ({

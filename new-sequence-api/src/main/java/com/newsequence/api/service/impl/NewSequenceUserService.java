@@ -4,6 +4,7 @@ import com.newsequence.api.exception.user.UserDoesNotExistException;
 import com.newsequence.api.model.User;
 import com.newsequence.api.repository.UserRepository;
 import com.newsequence.api.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -11,9 +12,12 @@ import java.util.Optional;
 @Component
 public class NewSequenceUserService implements UserService {
 
-    private final UserRepository userRepository;
-    //private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final UserRepository userRepository;
+
+
+    //private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
     public NewSequenceUserService(UserRepository userRepository) { //, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         //this.bCryptPasswordEncoder = bCryptPasswordEncoder;
