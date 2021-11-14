@@ -7,6 +7,7 @@ import com.newsequence.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -15,22 +16,17 @@ public class NewSequenceUserService implements UserService {
 
     private final UserRepository userRepository;
 
-
-    //private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
-    public NewSequenceUserService(UserRepository userRepository) { //, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public NewSequenceUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        //this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public User register(User user) {
-        boolean userExists = userRepository.findById(user.getId()).isPresent();
+        User userExists = userRepository.findByEmail(user.getEmailAddress());
 
-        if (userExists) {
+        if (userExists == user) {
             throw new IllegalStateException("email already taken");
         }
-
-        //String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
         String encodedPassword = user.getPassword();
         user.setPassword(encodedPassword);
@@ -38,13 +34,12 @@ public class NewSequenceUserService implements UserService {
         userRepository.save(user);
 
         return user;
-
     }
 
-    @Override
-    public User login(String email, String password) {
-        return null;
-    }
+    //@Override
+    //public User login(String email, String password) {
+    //    return null;
+    //}
 
     @Override
     public User getUser(Long id) {
@@ -58,20 +53,9 @@ public class NewSequenceUserService implements UserService {
 
         return  user.get();
     }
-/*
-    @PostMapping("/user/registration")
-    public ModelAndView registerUserAccount(
-            @ModelAttribute("user") @Valid UserDto userDto,
-            HttpServletRequest request,
-            Errors errors) {
 
-        try {
-            User registered = userService.registerNewUserAccount(userDto);
-        } catch (UserAlreadyExistException uaeEx) {
-            mav.addObject("message", "An account for that username/email already exists.");
-            return mav;
-        }
-
-        // rest of the implementation
-    }*/
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
 }

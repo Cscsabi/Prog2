@@ -1,10 +1,27 @@
-import { faBook, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBook,
+  faSearch,
+  faShoppingCart,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import React, { useState } from "react";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Form,
+  FormControl,
+  InputGroup,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const NavigationBar = () => {
+  const [search, setSearch] = useState("");
+
+  const searchChange = (event) => {
+    setSearch(event.target.value);
+  };
+
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
@@ -13,12 +30,26 @@ export const NavigationBar = () => {
             <FontAwesomeIcon icon={faBook} />
             Book Shop
           </Link>
-          <Link to={"add"} className="navbar-brand">
-            Add Book
-          </Link>
           <Link to={"list"} className="navbar-brand">
-            Book List
+            All Books
           </Link>
+        </Nav>
+        <Nav className="navbar-center">
+          <Form>
+            <InputGroup className="mb-2" style={{ width: "40rem" }}>
+              <FormControl
+                id="inlineFormInputGroup"
+                placeholder="Search for books"
+                onChange={searchChange}
+                value={search}
+              />
+              <InputGroup.Text>
+                <Link to={""} onClick={() => setSearch("")}>
+                  <FontAwesomeIcon icon={faSearch} />
+                </Link>
+              </InputGroup.Text>
+            </InputGroup>
+          </Form>
         </Nav>
         <Nav className="navbar-right">
           <Link to={"registration"} className="navbar-brand">

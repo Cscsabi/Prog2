@@ -24,13 +24,12 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name="role")
-    public Role role;
+    @Column(name="role")
+    public String role;
 
     public User() {}
 
-    public User(Long id, String emailAddress, String lastName, String firstName, String password, Role role) {
+    public User(Long id, String emailAddress, String lastName, String firstName, String password, String role) {
         this.id = id;
         this.emailAddress = emailAddress;
         this.lastName = lastName;
@@ -79,11 +78,11 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }

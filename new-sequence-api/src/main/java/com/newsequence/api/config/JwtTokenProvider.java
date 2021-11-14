@@ -34,7 +34,7 @@ public class JwtTokenProvider implements Serializable {
 
     private final long validityInMilliseconds = 50 * 60 * 60; // 2 minute
 
-    public String createToken(String username, Role role) {
+    public String createToken(String username, String role) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("auth", role);
 

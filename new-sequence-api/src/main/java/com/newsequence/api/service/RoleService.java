@@ -4,5 +4,5 @@ import com.newsequence.api.model.Role;
 
 public interface RoleService {
 
-    Role findByName(String name);
+    String findByName(String name);
 }

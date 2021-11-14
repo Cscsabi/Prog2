@@ -1,6 +1,7 @@
 package com.newsequence.api.controller;
 
 import com.newsequence.api.config.JwtTokenProvider;
+import com.newsequence.api.model.Book;
 import com.newsequence.api.model.User;
 import com.newsequence.api.repository.RoleRepository;
 import com.newsequence.api.repository.UserRepository;
@@ -20,8 +21,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController()
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 /*
     private final UserService userService;
@@ -57,10 +60,15 @@ public class UserController {
     private JwtTokenProvider tokenProvider;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
+    @GetMapping("all")
+    public List<User> getUsers() {
+        return userService.getUsers();
+    }
 
     @PostMapping(value = "/register")
     public ResponseEntity<String> register(@RequestBody User user) {
@@ -68,7 +76,7 @@ public class UserController {
         JSONObject jsonObject = new JSONObject();
         try {
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-            user.setRole(roleRepository.findByName(ConstantUtils.USER.toString()));
+            user.setRole("user");
             User savedUser = userRepository.saveAndFlush(user);
             jsonObject.put("message", savedUser.getFirstName() + " " + savedUser.getLastName() + " saved succesfully");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);

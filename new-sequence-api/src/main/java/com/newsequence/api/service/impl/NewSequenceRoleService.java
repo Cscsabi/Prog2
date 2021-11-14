@@ -13,7 +13,7 @@ public class NewSequenceRoleService implements RoleService {
     private RoleRepository roleRepository;
 
     @Override
-    public Role findByName(String name) {
+    public String findByName(String name) {
         return roleRepository.findByName(name);
     }
 }

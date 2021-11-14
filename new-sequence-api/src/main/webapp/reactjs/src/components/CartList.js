@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Cart } from "./Cart";
-import { Book } from "./Book";
 import { Col, Container, Row, Table } from "react-bootstrap";
 import { useStoreon } from "storeon/react";
 import { AppEvents } from "../store";
+import Button from "@restart/ui/esm/Button";
 
 export const CartList = () => {
   const { dispatch, books } = useStoreon("books");
-  //const { dispatchCart, cart } = useStoreon("books");
+
   const myStorage = window.localStorage;
 
   useEffect(() => {
@@ -16,15 +16,6 @@ export const CartList = () => {
       dispatch(AppEvents.LoadBooks);
     }
   }, [dispatch, books]);
-
-  /*
-  useEffect(() => {
-    console.log(cart);
-    if (!cart.length) {
-      dispatch(AppEvents.AddToCart);
-    }
-  }, [dispatchCart, cart]);
-  */
 
   const booksInCart = books.reduce((bookAccumulator, book) => {
     if (book.isbnNumber == myStorage.getItem(book.id)) {
@@ -54,25 +45,53 @@ export const CartList = () => {
             <Col>Cover</Col>
             <Col>Title</Col>
             <Col>Author</Col>
-            <Col>Isbn-number</Col>
-            <Col>Original Language</Col>
+            <Col>ISBN</Col>
+            <Col>Language</Col>
             <Col>Price</Col>
-            <Col></Col>
+            <Col>Actions</Col>
           </Row>
           {booksInCart.map((book) => (
             <Cart bookInCart={book}></Cart>
           ))}
-          <Row align="center">
-            <Col></Col>
-            <Col></Col>
-            <Col></Col>
-            <Col></Col>
-            <Col></Col>
-            <Col></Col>
-            <Col></Col>
-            <Col>{result} Ft</Col>
-          </Row>
         </Table>
+        <Row align="right" className="text-white">
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col className="bg-dark">Delivery cost:</Col>
+          <Col className="bg-dark">FREE</Col>
+        </Row>
+        <Row align="right" className="text-white">
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col className="bg-dark">Total:</Col>
+          <Col className="bg-dark">{result} Ft</Col>
+        </Row>
+        <br />
+        <Row className="text-white">
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col></Col>
+          <Col align="right">
+            <Button
+              onClick={() => localStorage.clear()}
+              className={"btn btn-info btn-lg"}
+            >
+              Checkout
+            </Button>
+          </Col>
+        </Row>
       </Container>
     );
   } else {
