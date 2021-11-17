@@ -1,32 +1,74 @@
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "@restart/ui/esm/Button";
-import React, { useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import React from "react";
+import { useStoreon } from "storeon/react";
+import { AppEvents } from "../store";
 
 export const Cart = ({
-  bookInCart: { id, author, coverPhotoUrl, isbnNumber, language, price, title },
+  bookInCart: {
+    id,
+    author,
+    coverPhotoUrl,
+    isbnNumber,
+    language,
+    price,
+    quantity,
+    title,
+  },
 }) => {
-  const [cheat, setCheat] = useState(0);
-
-  const removeFromCart = () => {
-    localStorage.removeItem(id);
-    alert(title + " deleted successfully!");
-    setCheat(cheat + 1);
+  const increaseQuantity = () => {
+    dispatch(AppEvents.AddToCart, book);
   };
 
+  const book = {
+    id,
+    author,
+    coverPhotoUrl,
+    isbnNumber,
+    language,
+    price,
+    quantity,
+    title,
+  };
+  const removeFromCart = () => {
+    let values = Object.values(cart);
+    console.log(values);
+    values = values.filter((x) => x.id === book.id);
+    dispatch(AppEvents.RemoveFromCart, values[0]);
+    console.log(values);
+    alert(title + " deleted successfully!");
+    //console.log(cart);
+  };
+
+  const { dispatch, cart } = useStoreon("cart");
+
   return (
-    <Row align="center" className="align-items-center">
-      <Col>
+    <tr align="center" className="align-items-center">
+      <td>
         {" "}
         <img src={coverPhotoUrl} alt="cover" width="150" height="200"></img>
-      </Col>
-      <Col>{title}</Col>
-      <Col>{author}</Col>
-      <Col>{isbnNumber}</Col>
-      <Col>{language}</Col>
-      <Col>{price} Ft</Col>
-      <Col align="center">
+      </td>
+      <td>{title}</td>
+      <td>{author}</td>
+      <td>{isbnNumber}</td>
+      <td>{language}</td>
+      <td>{price * quantity} Ft</td>
+      <td>{quantity}</td>
+
+      <td align="center">
+        <br />
+        <br />
+        <Button
+          className="btn btn-dark btn-sm"
+          type="contained"
+          onClick={increaseQuantity}
+        >
+          <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+        </Button>
+        <br />
+        <br />
+        <br />
         <Button
           className="btn btn-dark btn-sm"
           type="contained"
@@ -34,7 +76,7 @@ export const Cart = ({
         >
           <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>
         </Button>
-      </Col>
-    </Row>
+      </td>
+    </tr>
   );
 };

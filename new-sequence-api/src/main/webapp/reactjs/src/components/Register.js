@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "@restart/ui/esm/Button";
 import { Card, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { MyToastFail } from "./MyToastFail";
+import { useHistory } from "react-router";
 
 export const Register = () => {
   const [user, setUser] = useState([]);
@@ -22,22 +23,64 @@ export const Register = () => {
 
   const registerUser = (e) => {
     e.preventDefault();
-    const user = { emailAddress, lastName, firstName, password, role };
-    console.log(user);
-    fetch("http://localhost:8080/api/users/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    }).then(() => {
-      console.log("New user added");
-      setShow(1);
-      setFirstName("");
-      setLastName("");
+    const currentUser = { emailAddress, lastName, firstName, password, role };
+    const exists = user.find(
+      (thisUser) => thisUser.emailAddress === currentUser.emailAddress
+    );
+    const validPassword = password.length > 5;
+    const validEmail = checkEmail(emailAddress);
+    const validFirstName = firstName.length > 1;
+    const validLastName = lastName.length > 1;
+    if (
+      !exists &&
+      validPassword &&
+      validEmail &&
+      validFirstName &&
+      validLastName
+    ) {
+      fetch("http://localhost:8080/api/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(currentUser),
+      }).then(() => {
+        console.log("New user added");
+        setShow(1);
+        setFirstName("");
+        setLastName("");
+        setEmailAddress("");
+        setPassword("");
+        setTimeout(() => setShow(0), 3000);
+      });
+    } else if (!validEmail) {
+      alert("Given email is not valid!");
+    } else if (!validLastName) {
+      alert("Given lastname is too short! Must be longer than 1 character.");
+    } else if (!validFirstName) {
+      alert("Given firstname is too short! Must be longer than 1 character.");
+    } else if (!validPassword) {
+      alert("Given password is too short! Must be longer than 5 characters.");
+    } else {
+      setShow(2);
       setEmailAddress("");
       setPassword("");
       setTimeout(() => setShow(0), 3000);
-    });
+    }
   };
+
+  function checkEmail(email) {
+    email = email.toLowerCase();
+    if (
+      email.includes("@") &&
+      email.indexOf(".") > email.indexOf("@") &&
+      (email.endsWith(".com") ||
+        email.endsWith(".cc") ||
+        email.endsWith(".org") ||
+        email.endsWith(".hu"))
+    ) {
+      return true;
+    }
+    return false;
+  }
 
   useEffect(() => {
     fetch("http://localhost:8080/api/users/all")
@@ -60,7 +103,11 @@ export const Register = () => {
                 <FontAwesomeIcon icon={faSignInAlt} /> Register
               </Card.Header>
               <Card.Body>
-                <Form>
+                <Form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
                   <Form.Group as={Col}>
                     <InputGroup>
                       <InputGroup.Text>
@@ -80,7 +127,11 @@ export const Register = () => {
                   </Form.Group>
                 </Form>
                 <br />
-                <Form>
+                <Form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
                   <Form.Group as={Col}>
                     <InputGroup>
                       <InputGroup.Text>
@@ -100,7 +151,11 @@ export const Register = () => {
                   </Form.Group>
                 </Form>
                 <br />
-                <Form>
+                <Form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
                   <Form.Group as={Col}>
                     <InputGroup>
                       <InputGroup.Text>
@@ -120,7 +175,12 @@ export const Register = () => {
                   </Form.Group>
                 </Form>
                 <br />
-                <Form.Group as={Col}>
+                <Form.Group
+                  as={Col}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
                   <InputGroup>
                     <InputGroup.Text>
                       <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
@@ -138,7 +198,7 @@ export const Register = () => {
                   </InputGroup>
                 </Form.Group>
               </Card.Body>
-              <Card.Footer style={{ "text-align": "right" }}>
+              <Card.Footer style={{ textAlign: "right" }}>
                 <Button
                   size="sm"
                   type="button"
@@ -174,7 +234,11 @@ export const Register = () => {
                 <FontAwesomeIcon icon={faSignInAlt} /> Register
               </Card.Header>
               <Card.Body>
-                <Form>
+                <Form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
                   <Form.Group as={Col}>
                     <InputGroup>
                       <InputGroup.Text>
@@ -194,7 +258,11 @@ export const Register = () => {
                   </Form.Group>
                 </Form>
                 <br />
-                <Form>
+                <Form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
                   <Form.Group as={Col}>
                     <InputGroup>
                       <InputGroup.Text>
@@ -214,7 +282,11 @@ export const Register = () => {
                   </Form.Group>
                 </Form>
                 <br />
-                <Form>
+                <Form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
                   <Form.Group as={Col}>
                     <InputGroup>
                       <InputGroup.Text>
@@ -234,7 +306,12 @@ export const Register = () => {
                   </Form.Group>
                 </Form>
                 <br />
-                <Form.Group as={Col}>
+                <Form.Group
+                  as={Col}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
                   <InputGroup>
                     <InputGroup.Text>
                       <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
@@ -252,7 +329,7 @@ export const Register = () => {
                   </InputGroup>
                 </Form.Group>
               </Card.Body>
-              <Card.Footer style={{ "text-align": "right" }}>
+              <Card.Footer style={{ textAlign: "right" }}>
                 <Button
                   size="sm"
                   type="button"
@@ -284,7 +361,11 @@ export const Register = () => {
               <FontAwesomeIcon icon={faSignInAlt} /> Register
             </Card.Header>
             <Card.Body>
-              <Form>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
                 <Form.Group as={Col}>
                   <InputGroup>
                     <InputGroup.Text>
@@ -304,7 +385,11 @@ export const Register = () => {
                 </Form.Group>
               </Form>
               <br />
-              <Form>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
                 <Form.Group as={Col}>
                   <InputGroup>
                     <InputGroup.Text>
@@ -324,7 +409,11 @@ export const Register = () => {
                 </Form.Group>
               </Form>
               <br />
-              <Form>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
                 <Form.Group as={Col}>
                   <InputGroup>
                     <InputGroup.Text>
@@ -344,7 +433,12 @@ export const Register = () => {
                 </Form.Group>
               </Form>
               <br />
-              <Form.Group as={Col}>
+              <Form.Group
+                as={Col}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
                 <InputGroup>
                   <InputGroup.Text>
                     <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
@@ -362,7 +456,7 @@ export const Register = () => {
                 </InputGroup>
               </Form.Group>
             </Card.Body>
-            <Card.Footer style={{ "text-align": "right" }}>
+            <Card.Footer style={{ textAlign: "right" }}>
               <Button
                 size="sm"
                 type="button"

@@ -18,14 +18,20 @@ const initialState = {
     }
     */
   },
+  filtered: "",
 };
 
 export const AppEvents = {
   LoadBooks: "LoadBooks",
   LoadBooksEnd: "LoadBooksEnd",
+  LoadCart: "LoadCart",
   AddToCart: "AddToCart",
+  RemoveFromCart: "RemoveFromCart",
+  ClearCart: "ClearCart",
   Register: "Register",
   Login: "Login",
+  FilterData: "FilterData",
+  GetFilteredData: "GetFilteredData",
 };
 
 const appModule = (store) => {
@@ -48,6 +54,11 @@ const appModule = (store) => {
     books: [...book],
   }));
 
+  store.on(AppEvents.LoadCart, (state, book) => ({
+    ...state,
+    cart: [...book],
+  }));
+
   store.on(AppEvents.AddToCart, (state, book) => ({
     ...state,
     cart: {
@@ -57,6 +68,24 @@ const appModule = (store) => {
         quantity: (state.cart[book.id]?.quantity || 0) + 1,
       },
     },
+  }));
+
+  store.on(AppEvents.RemoveFromCart, (state, book) => {
+    return state.cart.filter((x) => x.id !== book.id);
+  });
+
+  store.on(AppEvents.ClearCart, () => ({
+    cart: {},
+  }));
+
+  store.on(AppEvents.FilterData, (state, strSearch) => ({
+    filtered: strSearch,
+  }));
+
+  store.on(AppEvents.GetFilteredData, (state) => ({
+    filtered: state.filtered,
+    // filtered
+    //filtered: strSearch, // FU?!
   }));
 };
 

@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Cart } from "./Cart";
 import { Col, Container, Row, Table } from "react-bootstrap";
 import { useStoreon } from "storeon/react";
-import { AppEvents } from "../store";
 import Button from "@restart/ui/esm/Button";
+import { AppEvents } from "../store";
 
 export const CartList = () => {
-  const { dispatch, books } = useStoreon("books");
+  //const { dispatch, books } = useStoreon("books");
+  const { dispatch, cart } = useStoreon("cart");
 
-  const myStorage = window.localStorage;
+  //const myStorage = window.localStorage;
 
+  /*
   useEffect(() => {
     console.log(booksInCart);
     if (!books.length) {
@@ -23,9 +25,23 @@ export const CartList = () => {
     }
 
     return bookAccumulator;
-  }, []);
+  }, []);*/
 
-  const result = booksInCart.map((book) => book.price).reduce(add, 0);
+  const handleClick = () => {
+    for (const prop of Object.getOwnPropertyNames(cart)) {
+      delete cart[prop];
+    }
+    dispatch(AppEvents.ClearCart);
+    //localStorage.clear();
+    alert("You will be redirected to the payment page");
+    console.log(cart);
+    result = 0;
+    console.log(result);
+  };
+
+  let result = Object.values(cart)
+    .map((book) => book.price * book.quantity)
+    .reduce(add, 0);
 
   function add(accumulator, a) {
     return accumulator + a;
@@ -41,20 +57,26 @@ export const CartList = () => {
           variant="dark"
           className="bg-dark text-white"
         >
-          <Row align="center">
-            <Col>Cover</Col>
-            <Col>Title</Col>
-            <Col>Author</Col>
-            <Col>ISBN</Col>
-            <Col>Language</Col>
-            <Col>Price</Col>
-            <Col>Actions</Col>
-          </Row>
-          {booksInCart.map((book) => (
-            <Cart bookInCart={book}></Cart>
-          ))}
+          <thead align="center">
+            <tr>
+              <td>Cover</td>
+              <td>Title</td>
+              <td>Author</td>
+              <td>Isbn-number</td>
+              <td>Language</td>
+              <td>Price</td>
+              <td>Quantity</td>
+              <td>Actions</td>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.values(cart).map((book, index) => (
+              <Cart key={`Cart-${index}`} bookInCart={book}></Cart>
+            ))}
+          </tbody>
         </Table>
         <Row align="right" className="text-white">
+          <Col></Col>
           <Col></Col>
           <Col></Col>
           <Col></Col>
@@ -65,6 +87,7 @@ export const CartList = () => {
           <Col className="bg-dark">FREE</Col>
         </Row>
         <Row align="right" className="text-white">
+          <Col></Col>
           <Col></Col>
           <Col></Col>
           <Col></Col>
@@ -83,11 +106,9 @@ export const CartList = () => {
           <Col></Col>
           <Col></Col>
           <Col></Col>
+          <Col></Col>
           <Col align="right">
-            <Button
-              onClick={() => localStorage.clear()}
-              className={"btn btn-info btn-lg"}
-            >
+            <Button onClick={handleClick} className={"btn btn-info btn-lg"}>
               Checkout
             </Button>
           </Col>
@@ -104,20 +125,25 @@ export const CartList = () => {
           variant="dark"
           className="bg-dark text-white"
         >
-          <Row align="center">
-            <Col>Cover</Col>
-            <Col>Title</Col>
-            <Col>Author</Col>
-            <Col>Isbn-number</Col>
-            <Col>Original Language</Col>
-            <Col>Price</Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col align="center" colSpan="7">
-              No Books In Cart
-            </Col>
-          </Row>
+          <thead align="center">
+            <tr>
+              <td>Cover</td>
+              <td>Title</td>
+              <td>Author</td>
+              <td>Isbn-number</td>
+              <td>Original Language</td>
+              <td>Price</td>
+              <td>Quantity</td>
+              <td>Actions</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" colSpan="8">
+                No Books In Cart
+              </td>
+            </tr>
+          </tbody>
         </Table>
       </Container>
     );

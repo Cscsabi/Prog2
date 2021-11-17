@@ -8,10 +8,16 @@ export const Book = ({
   book: { id, author, coverPhotoUrl, isbnNumber, language, price, title },
 }) => {
   const toCart = useCallback(() => {
-    dispatch(AppEvents.AddToCart, cart);
-    console.log(id);
-    localStorage.setItem(id, isbnNumber);
-    alert(title + " added to cart!");
+    dispatch(AppEvents.AddToCart, {
+      id,
+      author,
+      coverPhotoUrl,
+      isbnNumber,
+      language,
+      price,
+      title,
+    });
+    //alert(title + " added to cart!");
   });
 
   const { dispatch, cart } = useStoreon("cart");

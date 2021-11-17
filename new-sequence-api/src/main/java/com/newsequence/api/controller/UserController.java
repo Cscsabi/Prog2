@@ -75,7 +75,7 @@ public class UserController {
         log.info("UserResourceImpl : register");
         JSONObject jsonObject = new JSONObject();
         try {
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            //user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             user.setRole("user");
             User savedUser = userRepository.saveAndFlush(user);
             jsonObject.put("message", savedUser.getFirstName() + " " + savedUser.getLastName() + " saved succesfully");

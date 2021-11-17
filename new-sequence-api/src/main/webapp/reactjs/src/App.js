@@ -11,6 +11,7 @@ import { store } from "./store";
 import { CartList } from "./components/CartList";
 import { Register } from "./components/Register";
 import { Login } from "./components/Login";
+import { SearchPage } from "./components/SearchPage";
 
 function App() {
   const marginTop = {
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/registration" exact component={Register} />
                 <Route path="/login" exact component={Login} />
                 <Route path="/cart" exact component={CartList} />
+                <Route path="/search" exact component={SearchPage} />
               </Switch>
             </Col>
           </Row>

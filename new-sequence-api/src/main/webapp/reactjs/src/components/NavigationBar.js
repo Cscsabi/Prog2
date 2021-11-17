@@ -1,25 +1,18 @@
-import {
-  faBook,
-  faSearch,
-  faShoppingCart,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBook, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import {
-  Navbar,
-  Nav,
-  Container,
-  Form,
-  FormControl,
-  InputGroup,
-} from "react-bootstrap";
+import React, { useCallback, useEffect, useState } from "react";
+import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useStoreon } from "storeon/react";
+import { AppEvents } from "../store";
+import SearchBar from "./SearchBar";
 
 export const NavigationBar = () => {
-  const [search, setSearch] = useState("");
+  const [input, setInput] = useState("");
+  const { dispatch, search } = useStoreon("filtered");
 
-  const searchChange = (event) => {
-    setSearch(event.target.value);
+  const toAdd = () => {
+    dispatch(AppEvents.FilterData, input);
   };
 
   return (
@@ -27,29 +20,18 @@ export const NavigationBar = () => {
       <Container>
         <Nav className="navbar-left">
           <Link to="" className="navbar-brand">
-            <FontAwesomeIcon icon={faBook} />
-            Book Shop
+            <FontAwesomeIcon icon={faBook} /> Book Shop
           </Link>
           <Link to={"list"} className="navbar-brand">
             All Books
           </Link>
         </Nav>
         <Nav className="navbar-center">
-          <Form>
-            <InputGroup className="mb-2" style={{ width: "40rem" }}>
-              <FormControl
-                id="inlineFormInputGroup"
-                placeholder="Search for books"
-                onChange={searchChange}
-                value={search}
-              />
-              <InputGroup.Text>
-                <Link to={""} onClick={() => setSearch("")}>
-                  <FontAwesomeIcon icon={faSearch} />
-                </Link>
-              </InputGroup.Text>
-            </InputGroup>
-          </Form>
+          <SearchBar
+            input={input}
+            setInput={(input) => setInput(input)}
+            update={toAdd}
+          ></SearchBar>
         </Nav>
         <Nav className="navbar-right">
           <Link to={"registration"} className="navbar-brand">
