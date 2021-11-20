@@ -4,21 +4,10 @@ import { axiosInstance } from "../axios";
 
 const initialState = {
   books: [],
-  cart: {
-    /*
-    
-    Object.keys(cart) => [1, 2, 3...].map((idOfBook) => <ReactComp book={cart[idOfBook]} />)
-    Object.values(cart) => [book1, book2, book3...].map((book) => <ReactComp book={book} />)
-
-
-
-    [idOfBook]: {
-      quantity: 2, 
-      book: { ... }
-    }
-    */
-  },
+  cart: {},
   filtered: "",
+  authenticated: false,
+  currentUser: "",
 };
 
 export const AppEvents = {
@@ -26,12 +15,13 @@ export const AppEvents = {
   LoadBooksEnd: "LoadBooksEnd",
   LoadCart: "LoadCart",
   AddToCart: "AddToCart",
+  DecreaseQuantity: "DecreaseQuantity",
   RemoveFromCart: "RemoveFromCart",
   ClearCart: "ClearCart",
-  Register: "Register",
   Login: "Login",
+  Logout: "Logout",
   FilterData: "FilterData",
-  GetFilteredData: "GetFilteredData",
+  SetCurrentUser: "SetCurrentUser",
 };
 
 const appModule = (store) => {
@@ -50,7 +40,6 @@ const appModule = (store) => {
 
   store.on(AppEvents.LoadBooksEnd, (state, book) => ({
     ...state,
-    //books: Array.from(Array(12).keys()).map(() => book),
     books: [...book],
   }));
 
@@ -71,7 +60,13 @@ const appModule = (store) => {
   }));
 
   store.on(AppEvents.RemoveFromCart, (state, book) => {
-    return state.cart.filter((x) => x.id !== book.id);
+    const newCart = {
+      ...state.cart,
+    };
+    delete newCart[book.id];
+    return {
+      cart: newCart,
+    };
   });
 
   store.on(AppEvents.ClearCart, () => ({
@@ -82,11 +77,34 @@ const appModule = (store) => {
     filtered: strSearch,
   }));
 
-  store.on(AppEvents.GetFilteredData, (state) => ({
-    filtered: state.filtered,
-    // filtered
-    //filtered: strSearch, // FU?!
+  store.on(AppEvents.Login, (state) => ({
+    authenticated: true,
   }));
+
+  store.on(AppEvents.Logout, (state) => ({
+    authenticated: false,
+  }));
+
+  store.on(AppEvents.SetCurrentUser, (state, name) => ({
+    currentUser: name,
+  }));
+
+  store.on(AppEvents.DecreaseQuantity, (state, book) => {
+    if (state.cart[book.id]?.quantity - 1 === 0) {
+      return store.dispatch(AppEvents.RemoveFromCart, book);
+    } else {
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          [book.id]: {
+            ...book,
+            quantity: state.cart[book.id].quantity - 1,
+          },
+        },
+      };
+    }
+  });
 };
 
 export const store = createStoreon([storeonDevtools, storeonLogger, appModule]);

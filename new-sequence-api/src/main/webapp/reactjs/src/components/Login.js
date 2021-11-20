@@ -7,8 +7,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "@restart/ui/esm/Button";
 import React, { useEffect, useState } from "react";
 import { Card, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
+import { useStoreon } from "storeon/react";
+import { useAppContext } from "../lib/contextLib";
+import { AppEvents } from "../store";
+import { useHistory } from "react-router-dom";
 
 export const Login = () => {
+  const { userHasAuthenticated } = useAppContext();
+  const { dispatch } = useStoreon("authenticated");
+
   const [user, setUser] = useState([]);
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -16,16 +23,26 @@ export const Login = () => {
   const currentUser = { emailAddress, password };
 
   const handleClick = () => {
-    const found = user.find(
-      (thisUser) =>
-        thisUser.emailAddress === currentUser.emailAddress &&
-        thisUser.password === currentUser.password
-    );
+    if (emailAddress.length !== 0 || password.length !== 0) {
+      const found = user.find(
+        (thisUser) =>
+          thisUser.emailAddress === currentUser.emailAddress &&
+          thisUser.password === currentUser.password
+      );
 
-    if (found) {
-      alert("login");
-    } else {
-      alert("User not found!");
+      if (found) {
+        dispatch(AppEvents.Login);
+        dispatch(
+          AppEvents.SetCurrentUser,
+          found.firstName + " " + found.lastName
+        );
+        alert("Logged in successfully!");
+        history.push("/");
+        setEmailAddress("");
+        setPassword("");
+      } else {
+        alert("User not found!");
+      }
     }
   };
 
@@ -37,6 +54,8 @@ export const Login = () => {
       });
   }, []);
 
+  const history = useHistory();
+
   return (
     <Row className="justify-content-md-center">
       <Col xs={5}>
@@ -45,11 +64,7 @@ export const Login = () => {
             <FontAwesomeIcon icon={faSignInAlt} /> Login
           </Card.Header>
           <Card.Body>
-            <Form
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            >
+            <Form>
               <Form.Group as={Col}>
                 <InputGroup>
                   <InputGroup.Text>
@@ -64,16 +79,18 @@ export const Login = () => {
                     onChange={(e) => setEmailAddress(e.target.value)}
                     className={"bg-dark text-white"}
                     placeholder="Enter Email Address"
+                    onKeyDown={(e) => {
+                      if (e.code === "Enter") {
+                        handleClick();
+                        e.preventDefault();
+                      }
+                    }}
                   />
                 </InputGroup>
               </Form.Group>
             </Form>
             <br />
-            <Form
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            >
+            <Form ű>
               <Form.Group as={Col}>
                 <InputGroup>
                   <InputGroup.Text>
@@ -88,6 +105,12 @@ export const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className={"bg-dark text-white"}
                     placeholder="Enter Password"
+                    onKeyDown={(e) => {
+                      if (e.code === "Enter") {
+                        handleClick();
+                        e.preventDefault();
+                      }
+                    }}
                   />
                 </InputGroup>
               </Form.Group>
@@ -99,7 +122,6 @@ export const Login = () => {
               type="button"
               variant="success"
               className="btn btn-primary btn-med"
-              disabled={emailAddress.length === 0 || password.length === 0}
               onClick={handleClick}
             >
               <FontAwesomeIcon icon={faSignInAlt} />

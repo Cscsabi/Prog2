@@ -36,11 +36,6 @@ public class NewSequenceUserService implements UserService {
         return user;
     }
 
-    //@Override
-    //public User login(String email, String password) {
-    //    return null;
-    //}
-
     @Override
     public User getUser(Long id) {
         Optional<User> user;

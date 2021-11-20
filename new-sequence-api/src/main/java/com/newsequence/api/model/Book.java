@@ -7,47 +7,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "Books")
 @SequenceGenerator(name="book_seq")
 public class Book {
-/*
-    @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_seq")
-    @Column(name = "id")
-    private Long itemId;
-
-    @Column(name = "item_name")
-    private String itemName;
-
-    @Column(name = "item_type")
-    public String itemType;
-
-    @Column(name = "item_price")
-    public double itemPrice;
-
-    public Item() {}
-
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public String getItemType() {
-        return itemType;
-    }
-
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
-    }
-
-    public Long getItemId() {
-        return itemId;
-    }*/
-
     @Id
     @GeneratedValue
     private Long id;

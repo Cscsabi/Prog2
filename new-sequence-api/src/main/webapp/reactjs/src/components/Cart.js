@@ -1,4 +1,4 @@
-import { faPlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faMinus, faPlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "@restart/ui/esm/Button";
 import React from "react";
@@ -31,14 +31,16 @@ export const Cart = ({
     quantity,
     title,
   };
+
   const removeFromCart = () => {
     let values = Object.values(cart);
-    console.log(values);
     values = values.filter((x) => x.id === book.id);
     dispatch(AppEvents.RemoveFromCart, values[0]);
-    console.log(values);
     alert(title + " deleted successfully!");
-    //console.log(cart);
+  };
+
+  const decreaseQuantity = () => {
+    dispatch(AppEvents.DecreaseQuantity, book);
   };
 
   const { dispatch, cart } = useStoreon("cart");
@@ -58,7 +60,6 @@ export const Cart = ({
 
       <td align="center">
         <br />
-        <br />
         <Button
           className="btn btn-dark btn-sm"
           type="contained"
@@ -67,6 +68,14 @@ export const Cart = ({
           <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
         </Button>
         <br />
+        <br />
+        <Button
+          className="btn btn-dark btn-sm"
+          type="contained"
+          onClick={decreaseQuantity}
+        >
+          <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
+        </Button>
         <br />
         <br />
         <Button

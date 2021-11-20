@@ -41,14 +41,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter implement
                 .authorizeRequests().antMatchers("/user/*").permitAll().anyRequest().permitAll().and().httpBasic();
         http.apply(new JwtTokenConfigurer(tokenProvider));
     }
-/*
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .authorizeRequests()
-                .anyRequest().permitAll()
-                .and().httpBasic();
-    }*/
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {

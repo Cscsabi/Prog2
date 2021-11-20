@@ -17,7 +17,7 @@ export const Book = ({
       price,
       title,
     });
-    //alert(title + " added to cart!");
+    alert(title + " added to cart!");
   });
 
   const { dispatch, cart } = useStoreon("cart");

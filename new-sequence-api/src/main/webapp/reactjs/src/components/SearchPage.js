@@ -5,14 +5,38 @@ import { AppEvents } from "../store";
 import { Book } from "./Book";
 
 export const SearchPage = () => {
-  const { dispatch, test, /*search,*/ books } = useStoreon("filtered", "books");
-  const search = "sweet"; // TEST-DATA
+  const { dispatch, books } = useStoreon("books");
+  const search = useStoreon("filtered").filtered;
 
-  useEffect(() => {
-    dispatch(AppEvents.GetFilteredData, test);
-  }, [dispatch, test]);
+  const improveSearch = (word) => {
+    const keyMap = {
+      á: "a",
+      é: "e",
+      í: "i",
+      ó: "o",
+      ö: "o",
+      ő: "o",
+      ú: "u",
+      ü: "u",
+      ű: "u",
+    };
 
-  console.log(test);
+    const result = [];
+
+    [...word].forEach((c) => {
+      let isPushed = false;
+      Object.keys(keyMap).forEach((key) => {
+        if (key === c) {
+          result.push(keyMap[key]);
+          isPushed = true;
+        }
+      });
+      if (!isPushed) {
+        result.push(c);
+      }
+    });
+    return result.join("");
+  };
 
   useEffect(() => {
     if (!books.length) {
@@ -23,8 +47,12 @@ export const SearchPage = () => {
   const bookList = books.reduce((bookAccumulator, book) => {
     if (
       search.length > 0 &&
-      (book.title.toLowerCase().includes(search.toString().toLowerCase()) ||
-        book.author.toLowerCase().includes(search.toString().toLowerCase()))
+      (improveSearch(book.title.toLowerCase()).includes(
+        improveSearch(search.toString().toLowerCase())
+      ) ||
+        improveSearch(book.author.toLowerCase()).includes(
+          improveSearch(search.toString().toLowerCase())
+        ))
     ) {
       bookAccumulator.push(book);
     }
@@ -46,7 +74,7 @@ export const SearchPage = () => {
 
   return (
     <Container>
-      <h1 style={{ color: "white" }}>Search results for {search}</h1>
+      <h1 style={{ color: "white" }}>Search results for "{search}"</h1>
       {bookGroups.map((bookGroup, bookGroupIndex) => (
         <Row key={`BookGroup-${bookGroupIndex}`}>
           {bookGroup.map((book, bookIndex) => (

@@ -6,37 +6,11 @@ import Button from "@restart/ui/esm/Button";
 import { AppEvents } from "../store";
 
 export const CartList = () => {
-  //const { dispatch, books } = useStoreon("books");
   const { dispatch, cart } = useStoreon("cart");
 
-  //const myStorage = window.localStorage;
-
-  /*
-  useEffect(() => {
-    console.log(booksInCart);
-    if (!books.length) {
-      dispatch(AppEvents.LoadBooks);
-    }
-  }, [dispatch, books]);
-
-  const booksInCart = books.reduce((bookAccumulator, book) => {
-    if (book.isbnNumber == myStorage.getItem(book.id)) {
-      bookAccumulator.push(book);
-    }
-
-    return bookAccumulator;
-  }, []);*/
-
   const handleClick = () => {
-    for (const prop of Object.getOwnPropertyNames(cart)) {
-      delete cart[prop];
-    }
     dispatch(AppEvents.ClearCart);
-    //localStorage.clear();
     alert("You will be redirected to the payment page");
-    console.log(cart);
-    result = 0;
-    console.log(result);
   };
 
   let result = Object.values(cart)

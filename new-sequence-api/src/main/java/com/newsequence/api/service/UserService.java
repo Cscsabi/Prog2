@@ -8,8 +8,6 @@ public interface UserService {
 
     User register(User user);
 
-    //User login(String email, String password);
-
     User getUser(Long id);
 
     List<User> getUsers();
