@@ -2,12 +2,14 @@ package com.newsequence.api.repository;
 
 import com.newsequence.api.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
-    @Query("FROM User WHERE email_address=:email_address")
-    User findByEmail(@Param("email_address") String email);
+    Optional<User> findByEmailAddress(String email);
+
+    User getByEmailAddress(String email);
+
 }

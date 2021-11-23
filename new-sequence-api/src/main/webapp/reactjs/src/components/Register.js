@@ -11,15 +11,27 @@ import Button from "@restart/ui/esm/Button";
 import { Card, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { MyToastFail } from "./MyToastFail";
 import { useHistory } from "react-router-dom";
+import { useStoreon } from "storeon/react";
+import { AppEvents } from "../store";
 
 export const Register = () => {
+  const { dispatch, authenticationLoading, authenticated } = useStoreon(
+    "authenticationLoading",
+    "authenticated"
+  );
+  const history = useHistory();
   const [user, setUser] = useState([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
   const [show, setShow] = useState(0);
+
+  useEffect(() => {
+    if (authenticated) {
+      history.push("/");
+    }
+  }, [history, authenticated]);
 
   const onlyAlpha = (str) => {
     let res = true;
@@ -33,51 +45,21 @@ export const Register = () => {
     return res;
   };
 
-  const registerUser = (e) => {
+  const registerUser = () => {
     if (
       emailAddress.length !== 0 &&
       password.length !== 0 &&
       firstName.length !== 0 &&
       lastName.length !== 0
     ) {
-      const currentUser = { emailAddress, lastName, firstName, password, role };
-      console.log(currentUser);
-      const exists = user.find(
-        (thisUser) => thisUser.emailAddress === currentUser.emailAddress
-      );
-      user.forEach((thisUser) =>
-        console.log(thisUser.emailAddress, currentUser.emailAddress)
-      );
+      // const currentUser = { emailAddress, lastName, firstName, password, role };
+      // TODO: validate on server side
       const validPassword = password.length > 5;
       const validEmail = checkEmail(emailAddress);
       const validFirstName = firstName.length > 1 && onlyAlpha(firstName);
       const validLastName = lastName.length > 1 && onlyAlpha(lastName);
-      if (
-        !exists &&
-        validPassword &&
-        validEmail &&
-        validFirstName &&
-        validLastName
-      ) {
-        fetch("http://localhost:8080/api/users/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(currentUser),
-        }).then(() => {
-          alert("New user added");
-          setShow(1);
-          setFirstName("");
-          setLastName("");
-          setEmailAddress("");
-          setPassword("");
-          setTimeout(() => setShow(0), 1500);
-          history.push("/login");
-          fetch("http://localhost:8080/api/users/all")
-            .then((res) => res.json())
-            .then((result) => {
-              setUser(result);
-            });
-        });
+      if (validPassword && validEmail && validFirstName && validLastName) {
+        dispatch(AppEvents.Register, { username: emailAddress, password });
       } else if (!validEmail) {
         alert("Given email is not valid!");
       } else if (!validLastName) {
@@ -125,16 +107,6 @@ export const Register = () => {
     }
     return false;
   }
-
-  useEffect(() => {
-    fetch("http://localhost:8080/api/users/all")
-      .then((res) => res.json())
-      .then((result) => {
-        setUser(result);
-      });
-  }, []);
-
-  const history = useHistory();
 
   if (show === 1) {
     return (

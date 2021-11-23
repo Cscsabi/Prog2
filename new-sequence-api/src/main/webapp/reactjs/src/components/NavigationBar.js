@@ -14,19 +14,17 @@ import { useStoreon } from "storeon/react";
 import { AppEvents } from "../store";
 import SearchBar from "./SearchBar";
 import { useHistory } from "react-router-dom";
-import { Auth } from "aws-amplify";
 
 export const NavigationBar = () => {
   const [input, setInput] = useState("");
-  const { dispatch } = useStoreon();
-  const auth = useStoreon("authenticated").authenticated;
-  const nameOfUser = useStoreon("currentUser").currentUser;
-
-  const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const { dispatch, authenticated, currentUser } = useStoreon(
+    "authenticated",
+    "currentUser"
+  );
 
   useEffect(() => {
-    userHasAuthenticated(auth);
-  });
+    localStorage.getItem("loginState");
+  }, []);
 
   const toAdd = () => {
     dispatch(AppEvents.FilterData, input);
@@ -34,10 +32,8 @@ export const NavigationBar = () => {
     history.push("/search");
   };
 
-  async function handleLogout() {
-    await Auth.signOut();
+  function handleLogout() {
     dispatch(AppEvents.Logout);
-    userHasAuthenticated(false);
     alert("Logged out successfully!");
   }
 
@@ -70,7 +66,7 @@ export const NavigationBar = () => {
           ></SearchBar>
         </Nav>
         <Nav className="navbar-right">
-          {isAuthenticated ? (
+          {authenticated ? (
             <>
               <h6
                 style={{
@@ -79,7 +75,7 @@ export const NavigationBar = () => {
                   marginTop: "0.8em",
                 }}
               >
-                {displayReady(nameOfUser)}
+                {`${currentUser.firstName} ${currentUser.lastName}`}
               </h6>
               <Link to={"/"} onClick={handleLogout} className="navbar-brand">
                 <FontAwesomeIcon icon={faSignOutAlt} />

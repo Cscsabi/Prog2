@@ -1,12 +1,18 @@
 package com.newsequence.api.service.impl;
 
 import com.newsequence.api.exception.user.UserDoesNotExistException;
+import com.newsequence.api.model.AuthRequest;
+import com.newsequence.api.model.Authority;
 import com.newsequence.api.model.User;
+import com.newsequence.api.repository.AuthorityRepository;
 import com.newsequence.api.repository.UserRepository;
 import com.newsequence.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,22 +20,40 @@ import java.util.Optional;
 public class NewSequenceUserService implements UserService {
 
 
+    private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public NewSequenceUserService(UserRepository userRepository) {
+    public NewSequenceUserService(AuthorityRepository authorityRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.authorityRepository = authorityRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User register(User user) {
-        User userExists = userRepository.findByEmail(user.getEmailAddress());
+    public User register(AuthRequest authRequest) {
+        User user = userRepository.getByEmailAddress(authRequest.getUsername());
 
-        if (userExists == user) {
+        if (user != null) {
             throw new IllegalStateException("email already taken");
         }
+        user = new User();
+        user.setEmailAddress(authRequest.getUsername());
 
-        String encodedPassword = user.getPassword();
+        Authority authority = this.authorityRepository.getByAuthority(Authority.USER);
+        if(authority == null) {
+            this.authorityRepository.saveAndFlush(new Authority(Authority.USER));
+        }
+        authority = this.authorityRepository.getByAuthority(Authority.USER);
+
+        user.setAuthorities(new HashSet<>(Collections.singletonList(authority)));
+
+        String encodedPassword = passwordEncoder.encode(authRequest.getPassword());
         user.setPassword(encodedPassword);
+
+        // TODO: get from ui
+        user.setFirstName("asd");
+        user.setLastName("asd");
 
         userRepository.save(user);
 
@@ -52,5 +76,10 @@ public class NewSequenceUserService implements UserService {
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmailAddress(email);
     }
 }

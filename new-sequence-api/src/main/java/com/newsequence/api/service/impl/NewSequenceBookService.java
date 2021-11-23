@@ -21,7 +21,7 @@ public class NewSequenceBookService implements BookService {
 
     @Override
     public Book getBook(Long id) {
-        return bookRepository.findById(id).get();
+        return bookRepository.getById(id);
     }
 
     @Override

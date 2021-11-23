@@ -5,56 +5,32 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "@restart/ui/esm/Button";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { useStoreon } from "storeon/react";
-import { useAppContext } from "../lib/contextLib";
 import { AppEvents } from "../store";
 import { useHistory } from "react-router-dom";
 
 export const Login = () => {
-  const { userHasAuthenticated } = useAppContext();
-  const { dispatch } = useStoreon("authenticated");
-
-  const [user, setUser] = useState([]);
+  const { dispatch, authenticated, authenticationLoading } = useStoreon(
+    "authenticated",
+    "authenticationLoading"
+  );
+  const history = useHistory();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
 
-  const currentUser = { emailAddress, password };
-
-  const handleClick = () => {
-    if (emailAddress.length !== 0 || password.length !== 0) {
-      const found = user.find(
-        (thisUser) =>
-          thisUser.emailAddress === currentUser.emailAddress &&
-          thisUser.password === currentUser.password
-      );
-
-      if (found) {
-        dispatch(AppEvents.Login);
-        dispatch(
-          AppEvents.SetCurrentUser,
-          found.firstName + " " + found.lastName
-        );
-        alert("Logged in successfully!");
-        history.push("/");
-        setEmailAddress("");
-        setPassword("");
-      } else {
-        alert("User not found!");
-      }
-    }
-  };
-
   useEffect(() => {
-    fetch("http://localhost:8080/api/users/all")
-      .then((res) => res.json())
-      .then((result) => {
-        setUser(result);
-      });
-  }, []);
+    if (authenticated) {
+      history.push("/");
+    }
+  }, [history, authenticated]);
 
-  const history = useHistory();
+  const handleClick = useCallback(() => {
+    if (emailAddress.length !== 0 || password.length !== 0) {
+      dispatch(AppEvents.Login, { username: emailAddress, password });
+    }
+  }, [dispatch, emailAddress, password]);
 
   return (
     <Row className="justify-content-md-center">
