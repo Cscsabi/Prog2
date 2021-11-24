@@ -1,5 +1,5 @@
 import "./App.css";
-import { StoreContext, useStoreon } from "storeon/react";
+import { StoreContext } from "storeon/react";
 import { NavigationBar } from "./components/NavigationBar";
 import { Col, Container, Row } from "react-bootstrap";
 import { Welcome } from "./components/Welcome";

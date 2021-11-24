@@ -5,7 +5,7 @@ import { AppEvents } from "../store";
 import { Book } from "./Book";
 
 export const SearchPage = () => {
-  const { dispatch, books } = useStoreon("books");
+  const { dispatch, books } = useStoreon("books", "filtered");
   const search = useStoreon("filtered").filtered;
 
   const improveSearch = (word) => {

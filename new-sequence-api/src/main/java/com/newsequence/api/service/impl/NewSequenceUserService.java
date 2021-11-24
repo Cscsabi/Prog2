@@ -32,6 +32,8 @@ public class NewSequenceUserService implements UserService {
     }
 
     public User register(AuthRequest authRequest) {
+        System.out.println(authRequest);
+        System.out.println(authRequest.getUsername());
         User user = userRepository.getByEmailAddress(authRequest.getUsername());
 
         if (user != null) {
@@ -52,8 +54,8 @@ public class NewSequenceUserService implements UserService {
         user.setPassword(encodedPassword);
 
         // TODO: get from ui
-        user.setFirstName("asd");
-        user.setLastName("asd");
+        user.setFirstName(authRequest.getFirst());
+        user.setLastName(authRequest.getLast());
 
         userRepository.save(user);
 

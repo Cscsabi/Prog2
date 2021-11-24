@@ -7,7 +7,7 @@ import { AppEvents } from "../store";
 export const Book = ({
   book: { id, author, coverPhotoUrl, isbnNumber, language, price, title },
 }) => {
-  const { dispatch, cart } = useStoreon("cart");
+  const { dispatch } = useStoreon("cart");
   const toCart = useCallback(() => {
     dispatch(AppEvents.AddToCart, {
       id,

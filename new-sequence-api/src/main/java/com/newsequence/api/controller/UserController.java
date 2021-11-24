@@ -42,6 +42,8 @@ public class UserController {
     @PostMapping(value = "/register")
     public ResponseEntity<UserResponse> register(@RequestBody AuthRequest request) {
         // TODO: validate user entity (password policy, etc.)
+        System.out.println("CONTROLLER " + request.getFirst() + " " + request.getLast() + request.getUsername() + request.getPassword());
+        System.out.println(request);
         try {
             User savedUser = this.userService.register(request);
             UserResponse userResponse = new UserResponse(
@@ -97,7 +99,7 @@ public class UserController {
     public ResponseEntity<User> getUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        //TODO: test it, as this is probably not needed
+        // Probably not needed
         if(auth == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "User not authenticated!");

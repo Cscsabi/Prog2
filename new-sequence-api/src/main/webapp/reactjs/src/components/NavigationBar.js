@@ -22,6 +22,7 @@ export const NavigationBar = () => {
     "currentUser"
   );
 
+  console.log(currentUser);
   useEffect(() => {
     localStorage.getItem("loginState");
   }, []);
@@ -43,8 +44,18 @@ export const NavigationBar = () => {
     return first.toUpperCase() + rest.join("").toLowerCase();
   }
 
+  // TODO: This is an object, so I cannot iterate over it this way
   function displayReady(str) {
     return capitalize(str.split(" ")[0]) + " " + capitalize(str.split(" ")[1]);
+  }
+
+  let firstToDisplay = "";
+  let lastToDisplay = "";
+  try {
+    firstToDisplay = displayReady(currentUser.firstName);
+    lastToDisplay = displayReady(currentUser.lastName);
+  } catch (e) {
+    console.log(e);
   }
 
   return (
@@ -75,7 +86,9 @@ export const NavigationBar = () => {
                   marginTop: "0.8em",
                 }}
               >
-                {`${currentUser.firstName} ${currentUser.lastName}`}
+                {currentUser.lastName != null
+                  ? lastToDisplay + " " + firstToDisplay
+                  : input}
               </h6>
               <Link to={"/"} onClick={handleLogout} className="navbar-brand">
                 <FontAwesomeIcon icon={faSignOutAlt} />

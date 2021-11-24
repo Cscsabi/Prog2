@@ -9,7 +9,7 @@ const initialState = {
   cart: {},
   filtered: "",
   authenticated: false,
-  authenticationLoading: false,
+  header: null,
   currentUser: null,
   error: "",
 };
@@ -24,7 +24,7 @@ export const AppEvents = {
   Login: "Login",
   Register: "Register",
   SetAuthenticated: "SetAuthenticated",
-  SetAuthenticationLoading: "SetAuthenticationLoading",
+  SetHeader: "SetHeader",
   Logout: "Logout",
   FilterData: "FilterData",
   SetCurrentUser: "SetCurrentUser",
@@ -38,19 +38,23 @@ const appModule = (store) => {
       cart = JSON.parse(cartString);
     }
     //TODO: get token from localStorage, set Auth header on axiosInstance with Bearer set logged in, add user controller mapping to validate token
+
+    let currentUser = initialState.currentUser;
+    const userInLocalStorage = localStorage.getItem("user");
+    if (userInLocalStorage) {
+      currentUser = JSON.parse(userInLocalStorage);
+    }
+
     const getExistingToken = localStorage.getItem("loginState");
     let authenticated = initialState.authenticated;
-    if (
-      `Bearer ${getExistingToken}` ===
-      axiosInstance.defaults.headers["Authorization"]
-    ) {
-      console.log("xd");
+    if (getExistingToken) {
       authenticated = true;
     }
     return {
       ...initialState,
       cart,
       authenticated,
+      currentUser,
     };
   });
 
@@ -111,32 +115,38 @@ const appModule = (store) => {
 
   const handleLoginOrRegisterFactory =
     (endpoint) =>
-    async (state, { username, password }) => {
+    async (state, { username, password, last, first }) => {
       if (state.authenticated) {
         return;
       }
-
-      store.dispatch(AppEvents.SetAuthenticationLoading, true);
 
       try {
         const response = await axiosInstance.post(`/users/${endpoint}`, {
           username,
           password,
+          last,
+          first,
         });
         const jwtToken = response.headers["authorization"];
+
+        console.log(response);
 
         axiosInstance.defaults.headers["Authorization"] = `Bearer ${jwtToken}`;
 
         store.dispatch(AppEvents.SetCurrentUser, response.data);
-        store.dispatch(AppEvents.SetAuthenticationLoading, true);
+        store.dispatch(AppEvents.SetHeader, `Bearer ${jwtToken}`);
         store.dispatch(AppEvents.SetAuthenticated, true);
 
-        localStorage.setItem("loginState", JSON.stringify(jwtToken));
+        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem(
+          "loginState",
+          `Bearer ${JSON.stringify(jwtToken)}`
+        );
       } catch (e) {
         store.dispatch(AppEvents.SetCurrentUser, null);
         // TODO: use user === null to check it
         store.dispatch(AppEvents.SetAuthenticated, false);
-        store.dispatch(AppEvents.SetAuthenticationLoading, false);
+        store.dispatch(AppEvents.SetHeader, null);
         // TODO: Add error to state and display it, e.g.: invalid password
         console.error(e);
       }
@@ -149,7 +159,7 @@ const appModule = (store) => {
     delete axiosInstance.defaults.headers["Authorization"];
     store.dispatch(AppEvents.SetCurrentUser, null);
     store.dispatch(AppEvents.SetAuthenticated, false);
-    store.dispatch(AppEvents.SetAuthenticationLoading, false);
+    store.dispatch(AppEvents.SetHeader, null);
     localStorage.removeItem("loginState");
   });
 
@@ -157,8 +167,8 @@ const appModule = (store) => {
     currentUser,
   }));
 
-  store.on(AppEvents.SetAuthenticationLoading, (_, authenticationLoading) => ({
-    authenticationLoading,
+  store.on(AppEvents.SetHeader, (_, header) => ({
+    header,
   }));
 
   store.on(AppEvents.SetAuthenticated, (_, authenticated) => ({

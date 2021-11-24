@@ -12,13 +12,12 @@ import { AppEvents } from "../store";
 import { useHistory } from "react-router-dom";
 
 export const Login = () => {
-  const { dispatch, authenticated, authenticationLoading } = useStoreon(
-    "authenticated",
-    "authenticationLoading"
-  );
+  const { dispatch, authenticated } = useStoreon("authenticated");
   const history = useHistory();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   useEffect(() => {
     if (authenticated) {
@@ -28,7 +27,13 @@ export const Login = () => {
 
   const handleClick = useCallback(() => {
     if (emailAddress.length !== 0 || password.length !== 0) {
-      dispatch(AppEvents.Login, { username: emailAddress, password });
+      dispatch(AppEvents.Login, {
+        username: emailAddress,
+        password,
+        last: lastName,
+        first: firstName,
+      });
+      alert("Login successful!");
     }
   }, [dispatch, emailAddress, password]);
 
@@ -66,7 +71,7 @@ export const Login = () => {
               </Form.Group>
             </Form>
             <br />
-            <Form ű>
+            <Form>
               <Form.Group as={Col}>
                 <InputGroup>
                   <InputGroup.Text>

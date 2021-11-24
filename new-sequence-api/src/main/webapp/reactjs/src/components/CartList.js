@@ -10,7 +10,9 @@ export const CartList = () => {
 
   const handleClick = () => {
     dispatch(AppEvents.ClearCart);
-    alert("You will be redirected to the payment page");
+    alert(
+      "Thank you for your purchase!\nYou will be redirected to the payment page."
+    );
   };
 
   let result = Object.values(cart)

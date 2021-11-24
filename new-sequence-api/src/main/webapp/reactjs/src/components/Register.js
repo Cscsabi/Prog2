@@ -15,12 +15,8 @@ import { useStoreon } from "storeon/react";
 import { AppEvents } from "../store";
 
 export const Register = () => {
-  const { dispatch, authenticationLoading, authenticated } = useStoreon(
-    "authenticationLoading",
-    "authenticated"
-  );
+  const { dispatch, authenticated } = useStoreon("authenticated");
   const history = useHistory();
-  const [user, setUser] = useState([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
@@ -37,7 +33,7 @@ export const Register = () => {
     let res = true;
     const chars = [...str];
     chars.forEach((c) => {
-      if (/^[A-Z,Á,É,Í,Ó,Ö,Ő,Ú,Ü,Ű]$/i.test(c) === false) {
+      if (/^[A-Z,Á,É,Í,Ó,Ö,Ő,Ú,Ü,Ű,-]$/i.test(c) === false) {
         res = false;
       }
     });
@@ -59,7 +55,8 @@ export const Register = () => {
       const validFirstName = firstName.length > 1 && onlyAlpha(firstName);
       const validLastName = lastName.length > 1 && onlyAlpha(lastName);
       if (validPassword && validEmail && validFirstName && validLastName) {
-        dispatch(AppEvents.Register, { username: emailAddress, password });
+        dispatch(AppEvents.Register, { username: emailAddress, password, last: lastName, first: firstName });
+        alert(`User with ${emailAddress} registered successfully!`);
       } else if (!validEmail) {
         alert("Given email is not valid!");
       } else if (!validLastName) {
