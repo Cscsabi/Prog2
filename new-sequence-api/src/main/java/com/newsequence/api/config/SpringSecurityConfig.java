@@ -1,7 +1,6 @@
 package com.newsequence.api.config;
 
 import com.newsequence.api.filters.JwtTokenFilter;
-import com.newsequence.api.model.Authority;
 import com.newsequence.api.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

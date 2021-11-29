@@ -48,8 +48,6 @@ export const Register = () => {
       firstName.length !== 0 &&
       lastName.length !== 0
     ) {
-      // const currentUser = { emailAddress, lastName, firstName, password, role };
-      // TODO: validate on server side
       const validPassword = password.length > 5;
       const validEmail = checkEmail(emailAddress);
       const validFirstName = firstName.length > 1 && onlyAlpha(firstName);

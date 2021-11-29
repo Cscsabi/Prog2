@@ -33,7 +33,6 @@ export const Login = () => {
         last: lastName,
         first: firstName,
       });
-      alert("Login successful!");
     }
   }, [dispatch, emailAddress, password]);
 

@@ -37,7 +37,6 @@ const appModule = (store) => {
     if (cartString) {
       cart = JSON.parse(cartString);
     }
-    //TODO: get token from localStorage, set Auth header on axiosInstance with Bearer set logged in, add user controller mapping to validate token
 
     let currentUser = initialState.currentUser;
     const userInLocalStorage = localStorage.getItem("user");
@@ -142,12 +141,12 @@ const appModule = (store) => {
           "loginState",
           `Bearer ${JSON.stringify(jwtToken)}`
         );
+        alert("Login successful!");
       } catch (e) {
         store.dispatch(AppEvents.SetCurrentUser, null);
-        // TODO: use user === null to check it
         store.dispatch(AppEvents.SetAuthenticated, false);
         store.dispatch(AppEvents.SetHeader, null);
-        // TODO: Add error to state and display it, e.g.: invalid password
+        alert("Invalid password or email!");
         console.error(e);
       }
     };
@@ -161,6 +160,7 @@ const appModule = (store) => {
     store.dispatch(AppEvents.SetAuthenticated, false);
     store.dispatch(AppEvents.SetHeader, null);
     localStorage.removeItem("loginState");
+    localStorage.removeItem("user");
   });
 
   store.on(AppEvents.SetCurrentUser, (_, currentUser) => ({

@@ -46,14 +46,12 @@ export const NavigationBar = () => {
 
   // TODO: This is an object, so I cannot iterate over it this way
   function displayReady(str) {
-    return capitalize(str.split(" ")[0]) + " " + capitalize(str.split(" ")[1]);
+    return capitalize(str.firstName) + " " + capitalize(str.lastName);
   }
 
-  let firstToDisplay = "";
-  let lastToDisplay = "";
+  let nameToDisplay = "";
   try {
-    firstToDisplay = displayReady(currentUser.firstName);
-    lastToDisplay = displayReady(currentUser.lastName);
+    nameToDisplay = displayReady(currentUser);
   } catch (e) {
     console.log(e);
   }
@@ -86,9 +84,7 @@ export const NavigationBar = () => {
                   marginTop: "0.8em",
                 }}
               >
-                {currentUser.lastName != null
-                  ? lastToDisplay + " " + firstToDisplay
-                  : input}
+                {currentUser.lastName != null ? nameToDisplay : input}
               </h6>
               <Link to={"/"} onClick={handleLogout} className="navbar-brand">
                 <FontAwesomeIcon icon={faSignOutAlt} />

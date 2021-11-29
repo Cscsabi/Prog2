@@ -41,7 +41,6 @@ public class UserController {
 
     @PostMapping(value = "/register")
     public ResponseEntity<UserResponse> register(@RequestBody AuthRequest request) {
-        // TODO: validate user entity (password policy, etc.)
         System.out.println("CONTROLLER " + request.getFirst() + " " + request.getLast() + request.getUsername() + request.getPassword());
         System.out.println(request);
         try {
@@ -110,7 +109,6 @@ public class UserController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "User email is non existent!");
         }
-        // sanitize private data -> if expanded create a function for it
         user.get().setPassword(null);
 
         return new ResponseEntity<>(user.get(), HttpStatus.OK);
